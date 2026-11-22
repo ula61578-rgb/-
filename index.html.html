@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>혜인관 강의실 예약</title>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#f3f4f6;color:#222;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-size:15px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+header.top{background:#fff;border-bottom:1px solid #d5d8de}
+.top-in{max-width:1040px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand b{font-size:18px;color:#1d3557;letter-spacing:-.3px}
+.brand span{display:block;font-size:12px;color:#6b7280}
+.user{font-size:13px;color:#444;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+nav.tabs{background:#fff;border-bottom:1px solid #d5d8de}
+.tabs-in{max-width:1040px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
+.tab{border:0;background:none;padding:12px 14px;cursor:pointer;color:#555;border-bottom:3px solid transparent;white-space:nowrap}
+.tab.on{color:#1d3557;font-weight:700;border-bottom-color:#1d3557}
+main{max-width:1040px;margin:0 auto;padding:16px}
+.btn{border:1px solid #1d3557;background:#1d3557;color:#fff;border-radius:4px;padding:8px 14px;cursor:pointer}
+.btn:hover{background:#16294a}
+.btn.ghost{background:#fff;color:#1d3557}
+.btn.ghost:hover{background:#eef1f6}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn.danger{border-color:#9b2c2c;background:#fff;color:#9b2c2c}
+.btn:disabled{background:#e5e7eb;border-color:#d1d5db;color:#9ca3af;cursor:not-allowed}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:#fff;border:1px solid #d5d8de;border-radius:4px;padding:12px;margin-bottom:12px}
+.bar label{display:flex;flex-direction:column;font-size:12px;color:#555;gap:3px}
+.bar select,.field input,.field select,.field textarea{border:1px solid #b9bfc9;border-radius:4px;padding:7px 8px;background:#fff;min-width:96px}
+.bar .chk{flex-direction:row;align-items:center;gap:6px;font-size:13px;color:#333;padding-bottom:8px}
+.count{margin:0 0 10px;font-size:13px;color:#555}
+.notice{background:#fff8e6;border:1px solid #e6cf8a;border-radius:4px;padding:9px 12px;margin-bottom:12px;font-size:13px;color:#5a4a12}
+.notice ul{margin:4px 0 0;padding-left:18px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#555;margin-bottom:10px}
+.legend i{display:inline-block;width:12px;height:12px;border:1px solid #9aa3af;vertical-align:-2px;margin-right:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.card{background:#fff;border:1px solid #d5d8de;border-radius:4px;padding:12px}
+.card h3{margin:0;font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card .meta{font-size:12px;color:#6b7280;margin:2px 0 8px}
+.badge{font-size:12px;font-weight:400;padding:2px 8px;border-radius:10px;border:1px solid}
+.b-free{color:#1f6b3a;border-color:#8cc3a0;background:#eef8f1}
+.b-class{color:#455468;border-color:#b6c0cd;background:#eef1f5}
+.b-res{color:#7a5a00;border-color:#dcc27a;background:#fdf5dc}
+.b-lock{color:#8a2b2b;border-color:#d9a4a4;background:#fbeeee}
+.tl{position:relative;height:20px;background:#eef8f1;border:1px solid #b5d3bf;margin-top:4px}
+.seg{position:absolute;top:0;bottom:0;border-left:1px solid #fff;border-right:1px solid #fff}
+.seg.c{background:#c3ccd8}
+.seg.r{background:#ecd48c}
+.seg.n{background:#e3aaa0}
+.seg.x{background:repeating-linear-gradient(45deg,#e6c9c9,#e6c9c9 4px,#f4e4e4 4px,#f4e4e4 8px)}
+.nowline{position:absolute;top:-3px;bottom:-3px;width:2px;background:#c0392b}
+.ticks{position:relative;height:14px;font-size:10px;color:#777}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.card .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+.card .tags{font-size:12px;color:#8a2b2b}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d5d8de;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:middle}
+th{background:#f0f2f5;font-size:12px;color:#444}
+.tw{overflow-x:auto}
+.st{font-weight:700}
+.st.a{color:#1d3557}.st.b{color:#1f6b3a}.st.c{color:#6b7280}.st.d{color:#9b2c2c}
+.panel{background:#fff;border:1px solid #d5d8de;border-radius:4px;padding:14px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:16px}
+.empty{padding:28px;text-align:center;color:#777;background:#fff;border:1px solid #d5d8de}
+.mask{position:fixed;inset:0;background:rgba(20,28,40,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50;overflow:auto}
+.modal{background:#fff;border-radius:6px;width:100%;max-width:420px;padding:20px;border-top:4px solid #1d3557;max-height:100%;overflow:auto}
+.modal h2{margin:0 0 12px;font-size:18px}
+.modal ol{padding-left:20px;margin:0 0 16px}
+.modal ol li{margin-bottom:8px}
+.modal ol li small{display:block;color:#666}
+.mbtn{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.field{display:flex;flex-direction:column;gap:3px;margin-bottom:10px;font-size:13px;color:#444}
+.field input,.field select,.field textarea{width:100%;font-size:15px}
+.err{color:#9b2c2c;font-size:13px;min-height:18px;margin:2px 0}
+.seg2{display:flex;margin-bottom:14px;border:1px solid #1d3557;border-radius:4px;overflow:hidden}
+.seg2 button{flex:1;border:0;background:#fff;padding:8px;cursor:pointer;color:#1d3557}
+.seg2 button.on{background:#1d3557;color:#fff}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:4px;font-size:14px;z-index:90;max-width:90%}
+footer{max-width:1040px;margin:10px auto 40px;padding:0 16px;font-size:12px;color:#777;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+footer a{color:#555;cursor:pointer;text-decoration:underline;background:none;border:0;padding:0}
+.hint{font-size:12px;color:#777}
+.demo{position:fixed;right:12px;bottom:12px;background:#fff;border:1px solid #9aa3af;border-radius:4px;padding:12px;z-index:60;width:280px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.demo h4{margin:0 0 8px;font-size:14px}
+.demo .q{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.bar select{min-width:80px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="brand"><b>혜인관 강의실 예약</b><span>빈 강의실 실시간 조회 · 예약 (창의문제해결프로젝트 시연용)</span></div>
+  <div class="user" id="userbox"></div>
+</div></header>
+<nav class="tabs"><div class="tabs-in" id="tabs"></div></nav>
+<main id="main"></main>
+<footer>
+  <span>시연용 사이트입니다. 서경대학교 공식 서비스가 아니며, 시간표는 2026학년도 2학기 교양·전공 시간표를 기준으로 합니다.</span>
+  <button type="button" data-act="demo">시연 설정</button>
+</footer>
+<div id="layer"></div>
+<div id="toast" class="toast" style="display:none"></div>
+
+<script>
+const SCHEDULE=[[1,23,24,"혜-201","AI머니코칭"],[1,25,26,"혜-201","AI머니코칭"],[2,21,22,"혜-201","College English 2"],[2,23,24,"혜-201","스무살부자되기"],[2,25,26,"혜-201","College English 2"],[3,4,6,"혜-201","생활속의한국어2"],[4,21,22,"혜-201","College English 2"],[4,23,24,"혜-201","College English 2"],[4,25,26,"혜-201","College English 2"],[5,23,24,"혜-201","글로벌시사읽기"],[2,21,22,"혜-202","College English 2"],[2,23,24,"혜-202","커뮤니케이션심리학"],[2,25,26,"혜-202","College English 2"],[3,4,6,"혜-202","생활속의한국어2"],[4,21,22,"혜-202","College English 2"],[4,23,24,"혜-202","College English 2"],[4,25,26,"혜-202","College English 2"],[5,23,24,"혜-202","핀테크와AI혁신"],[2,21,22,"혜-203","College English 2"],[2,23,24,"혜-203","철학의이해"],[2,25,26,"혜-203","College English 2"],[3,4,6,"혜-203","생활속의한국어2"],[4,21,22,"혜-203","College English 2"],[4,23,24,"혜-203","College English 2"],[4,25,26,"혜-203","College English 2"],[2,21,22,"혜-204","College English 2"],[2,23,24,"혜-204","서양고전의이해"],[2,25,26,"혜-204","College English 2"],[3,4,6,"혜-204","중급토픽2"],[4,21,22,"혜-204","College English 2"],[4,23,24,"혜-204","College English 2"],[4,25,26,"혜-204","College English 2"],[2,21,22,"혜-205","College English 2"],[2,23,24,"혜-205","예술과상상력"],[2,25,26,"혜-205","College English 2"],[3,4,6,"혜-205","중급토픽2"],[4,21,22,"혜-205","College English 2"],[4,23,24,"혜-205","College English 2"],[4,25,26,"혜-205","College English 2"],[2,21,22,"혜-206","College English 2"],[2,23,24,"혜-206","음악의이해"],[2,25,26,"혜-206","College English 2"],[4,25,26,"혜-206","College English 2"],[2,21,22,"혜-207","College English 2"],[2,23,24,"혜-207","College English 2"],[2,25,26,"혜-207","College English 2"],[2,21,22,"혜-208","College English 2"],[2,23,24,"혜-208","College English 2"],[2,25,26,"혜-208","College English 2"],[2,21,22,"혜-209","College English 2"],[2,23,24,"혜-209","College English 2"],[2,25,26,"혜-209","College English 2"],[2,21,22,"혜-210","College English 2"],[2,23,24,"혜-210","College English 2"],[2,25,26,"혜-210","마음챙김심리학"],[3,4,5,"혜-210","TOEIC1"],[4,4,5,"혜-210","TOEIC2"],[5,2,3,"혜-210","TOEIC1"],[5,4,5,"혜-210","TOEIC2"],[1,2,3,"혜-301","창의문제해결프로젝트"],[1,23,24,"혜-301","보육과정"],[1,25,26,"혜-301","언어지도"],[2,21,21,"혜-301","상하수도공학"],[2,22,22,"혜-301","수리학및실험2"],[2,23,24,"혜-301","아동문학교육"],[2,25,26,"혜-301","가족관계"],[3,4,6,"혜-301","드라마한국어2"],[3,21,22,"혜-301","건축법규"],[4,21,21,"혜-301","상하수도공학"],[4,22,22,"혜-301","수리학및실험2"],[4,23,24,"혜-301","학습이론"],[4,25,26,"혜-301","아동안전관리"],[5,21,22,"혜-301","영유아교수방법"],[5,23,24,"혜-301","발달심리"],[1,7,8,"혜-302","창의문제해결프로젝트"],[1,21,22,"혜-302","부모교육"],[1,23,24,"혜-302","보육정책론"],[2,23,24,"혜-302","기업환경론"],[2,25,26,"혜-302","서양고전의이해"],[3,23,24,"혜-302","보육교사론"],[3,25,26,"혜-302","집단상담"],[4,23,24,"혜-302","핀테크와AI혁신"],[4,25,26,"혜-302","Advanced Calculus 2"],[5,21,22,"혜-302","영유아발달"],[5,23,24,"혜-302","상담이론"],[1,23,24,"혜-303","서비스마케팅"],[1,25,26,"혜-303","조직과인간관계"],[2,21,22,"혜-303","디지털무역과AI"],[2,23,24,"혜-303","무역학개론"],[2,23,24,"혜-303","무역경영"],[2,25,26,"혜-303","무역관계법"],[2,25,26,"혜-303","기업법"],[3,21,22,"혜-303","비즈니스계약및결제론"],[3,23,24,"혜-303","지역문화홍보마케팅실무"],[3,23,24,"혜-303","국제마케팅관리"],[3,25,26,"혜-303","글로벌비즈니스행동론"],[3,25,26,"혜-303","해외시장조사"],[4,21,22,"혜-303","국제금융론"],[4,23,24,"혜-303","국제운송물류"],[4,25,26,"혜-303","비즈니스세미나"],[5,21,22,"혜-303","물류실무"],[5,23,24,"혜-303","무역실무"],[1,7,8,"혜-304","창의문제해결프로젝트"],[1,23,24,"혜-304","데이터시각화"],[2,21,22,"혜-304","거시경제학"],[2,23,24,"혜-304","국제마케팅"],[2,25,26,"혜-304","생산및운영관리"],[3,23,24,"혜-304","무역실무"],[3,25,26,"혜-304","글로벌마케팅"],[4,23,24,"혜-304","재무관리"],[4,25,26,"혜-304","마케팅사례연구"],[5,21,22,"혜-304","인적자원관리"],[5,23,24,"혜-304","회계원리"],[5,25,26,"혜-304","기업과사회"],[1,4,5,"혜-305","World English 1"],[1,7,8,"혜-305","World English 2"],[2,23,24,"혜-305","사회복지개론"],[3,4,6,"혜-305","드라마한국어2"],[4,4,5,"혜-305","Life Care Design"],[4,25,26,"혜-305","법과사회"],[5,4,5,"혜-305","Life Care Design"],[1,7,8,"혜-306","창의문제해결프로젝트"],[1,23,24,"혜-306","경영정보시스템실습"],[2,23,24,"혜-306","비즈니스협상"],[2,25,26,"혜-306","국제경영"],[3,23,24,"혜-306","중급회계1"],[3,25,26,"혜-306","재무제표이해"],[4,23,24,"혜-306","영화속의법과윤리"],[4,25,26,"혜-306","관리회계"],[5,23,24,"혜-306","인간관계와리더십"],[5,25,26,"혜-306","경영학원론"],[1,23,24,"혜-307","행정학기출연습"],[1,23,24,"혜-307","경찰행정학연습"],[1,23,24,"혜-307","공무원행정학"],[2,23,24,"혜-307","형법각론"],[2,23,24,"혜-307","경찰형법각론"],[2,25,26,"혜-307","형법기초이론2"],[2,25,26,"혜-307","형법기초이론의이해2"],[2,25,26,"혜-307","형법총론2"],[2,25,26,"혜-307","기초형법2"],[3,4,6,"혜-307","드라마한국어2"],[4,23,24,"혜-307","공무원영어2"],[4,23,24,"혜-307","경찰공무원영어2"],[5,21,22,"혜-307","헌법원리와구조"],[5,21,22,"혜-307","헌법원리와구조의이해"],[5,21,22,"혜-307","헌법1"],[5,23,24,"혜-307","행정법의원리와법치행정"],[5,23,24,"혜-307","경찰행정법의원리와법치행정"],[5,23,24,"혜-307","행정법1"],[5,23,24,"혜-307","경찰행정법1"],[1,4,5,"혜-308","창의문제해결프로젝트"],[1,7,8,"혜-308","창의문제해결프로젝트"],[2,1,3,"혜-308","관광마케팅"],[2,4,6,"혜-308","관광사업실무"],[3,23,24,"혜-308","진로설계세미나"],[4,23,24,"혜-308","현대사회와패션"],[4,25,26,"혜-308","도시속공간여행"],[5,23,24,"혜-308","독일스토리"],[1,4,5,"혜-309","창의문제해결프로젝트"],[1,21,22,"혜-309","경찰학개론2"],[1,25,26,"혜-309","범죄예방론"],[1,25,26,"혜-309","범죄학개론"],[2,21,22,"혜-309","친족상속법"],[2,23,24,"혜-309","헌법소송법"],[2,25,26,"혜-309","경찰체력단련2"],[3,4,6,"혜-309","생활속의한국어2"],[3,21,22,"혜-309","행정구제법"],[1,21,22,"혜-310","공무원국사2"],[1,23,24,"혜-310","공무원판례형사소송법"],[1,25,26,"혜-310","미래사회와평생교육"],[2,23,24,"혜-310","인간관계와자기혁신"],[2,25,26,"혜-310","공무원헌법"],[3,21,21,"혜-310","도시계획관련법규"],[3,23,24,"혜-310","채권총론"],[3,25,26,"혜-310","담보물권법"],[4,21,22,"혜-310","공무원국어2"],[5,21,21,"혜-310","도시계획관련법규"],[1,4,5,"혜-311","Communication"],[1,25,26,"혜-311","전통문화의이해"],[2,23,24,"혜-311","생활속의법이야기"],[3,2,3,"혜-311","Communication"],[3,4,5,"혜-311","Communication"],[3,7,8,"혜-311","Communication"],[5,23,24,"혜-311","민법입문2"],[5,23,24,"혜-311","민법기초이론2"],[5,23,24,"혜-311","민법총칙2"],[5,23,24,"혜-311","기초민법2"],[1,2,3,"혜-401","창의문제해결프로젝트"],[1,4,5,"혜-401","창의문제해결프로젝트"],[1,7,8,"혜-401","창의문제해결프로젝트"],[2,21,22,"혜-401","건축의이해"],[2,23,24,"혜-401","창의공학과창의혁신"],[2,25,26,"혜-401","진로설계세미나"],[3,21,22,"혜-401","진로설계세미나"],[3,23,24,"혜-401","진로설계세미나"],[3,25,26,"혜-401","진로설계세미나"],[4,2,3,"혜-401","History / Culture of Skateboarding"],[4,23,24,"혜-401","투자와심리"],[4,25,26,"혜-401","영화속의스파이세계"],[5,1,3,"혜-401","한국문화의이해2"],[5,4,6,"혜-401","비즈니스한국어2"],[1,2,3,"혜-402","창의문제해결프로젝트"],[1,23,24,"혜-402","영미소설연구"],[1,25,26,"혜-402","에세이와비판적사고"],[1,25,26,"혜-402","Essay Writing"],[2,22,22,"혜-402","영어회화"],[2,22,22,"혜-402","Advanced English Conversation 2"],[2,23,24,"혜-402","빅데이터경영"],[2,25,26,"혜-402","영어읽기와확장"],[3,21,22,"혜-402","진로설계세미나"],[3,23,24,"혜-402","마케팅"],[3,25,26,"혜-402","트렌디중국어2"],[4,22,22,"혜-402","Advanced English Conversation 2"],[4,23,24,"혜-402","AI문법과작문"],[4,25,26,"혜-402","영미권지역연구"],[5,21,22,"혜-402","시사강독"],[5,21,22,"혜-402","시사영강독1"],[5,23,24,"혜-402","프랑스어번역실습1"],[1,22,22,"혜-403","커뮤니케이션프랑스어2"],[1,23,24,"혜-403","실무커뮤니케이션"],[1,25,26,"혜-403","Business Presentations in English"],[2,22,22,"혜-403","영미문화"],[2,23,24,"혜-403","AI통번역일어"],[2,23,24,"혜-403","일번역연습1"],[2,25,26,"혜-403","일어스토리텔링"],[2,25,26,"혜-403","관광일어1"],[3,22,22,"혜-403","커뮤니케이션프랑스어2"],[3,23,24,"혜-403","DELF1"],[3,25,26,"혜-403","아트패션프랑스어"],[4,22,22,"혜-403","영미문화"],[4,23,24,"혜-403","커뮤니케이션일회화"],[4,23,24,"혜-403","커뮤니케이션일회화2"],[4,25,26,"혜-403","트렌디일어"],[4,25,26,"혜-403","트랜디일본어"],[5,21,22,"혜-403","일어학입문"],[5,21,22,"혜-403","일본어학개론"],[5,23,24,"혜-403","비즈니스일회화2"],[1,2,3,"혜-404","창의문제해결프로젝트"],[1,23,24,"혜-404","AI와중국시장분석"],[1,25,26,"혜-404","중급중국어실습2"],[2,21,22,"혜-404","시사러시아어2"],[2,23,23,"혜-404","Media Listening 2"],[2,24,24,"혜-404","Business Talk 2"],[2,25,26,"혜-404","영문학개론"],[3,21,22,"혜-404","진로설계세미나"],[3,23,24,"혜-404","재무제표분석"],[3,25,26,"혜-404","마케팅리서치"],[4,1,3,"혜-404","초급뷰티한국어2"],[4,23,23,"혜-404","Media Listening 2"],[4,24,24,"혜-404","Business Talk 2"],[4,25,26,"혜-404","일어문법"],[4,25,26,"혜-404","일본어문법"],[5,1,3,"혜-404","한국문화의이해2"],[5,4,6,"혜-404","시네마한국어2"],[1,1,3,"혜-405","프레젠테이션한국어 2"],[1,25,26,"혜-405","일본챌린지"],[2,6,7,"혜-405","미래리더를위한대인관계"],[2,21,22,"혜-405","연출가로서바라보기"],[2,25,26,"혜-405","민주사회와시민의식"],[3,23,24,"혜-405","세계뮤지컬의이해"],[3,25,26,"혜-405","숫자로보는경제생활"],[4,21,22,"혜-405","국가안보론"],[4,23,24,"혜-405","성공적인재테크투자이론"],[4,25,26,"혜-405","행복과자기관리"],[5,1,3,"혜-405","한국문화의이해2"],[5,4,5,"혜-405","미래리더를위한대인관계"],[1,2,3,"혜-406","창의문제해결프로젝트"],[1,7,8,"혜-406","창의문제해결프로젝트"],[1,23,24,"혜-406","스크린중국어"],[2,21,22,"혜-406","호러장르소사이어티"],[2,23,23,"혜-406","Business Writing 1"],[2,25,26,"혜-406","실용프랑스어실습2"],[3,23,24,"혜-406","국제재무관리"],[3,25,26,"혜-406","경영전략과의사결정"],[4,1,3,"혜-406","초급뷰티한국어2"],[4,23,23,"혜-406","Business Writing 1"],[4,25,26,"혜-406","Advanced Business Talk 2"],[5,1,3,"혜-406","한국문화의이해2"],[1,1,3,"혜-407","프레젠테이션한국어 2"],[1,25,26,"혜-407","다문화주의와이민"],[2,21,22,"혜-407","연애그리고결혼"],[2,23,24,"혜-407","경제의이해"],[2,25,26,"혜-407","공연예술의이해"],[3,23,24,"혜-407","재미있는연기연습"],[3,25,26,"혜-407","발표토론과글쓰기"],[4,1,3,"혜-407","초급뷰티한국어2"],[4,25,26,"혜-407","증권투자입문"],[5,1,3,"혜-407","한국문화의이해2"],[5,23,24,"혜-407","세계문화여행-중국"],[5,25,26,"혜-407","텍스트의이해"],[1,7,8,"혜-408","창의문제해결프로젝트"],[1,23,24,"혜-408","요리프랑스어"],[2,1,3,"혜-408","한국문화탐방2"],[2,23,24,"혜-408","빅데이터경영"],[2,25,26,"혜-408","(비즈니스영어"],[3,23,24,"혜-408","진로설계세미나"],[3,25,26,"혜-408","진로설계세미나"],[4,23,24,"혜-408","러시아어3"],[4,25,26,"혜-408","프랑스어2"],[5,1,3,"혜-408","고급토픽2"],[5,5,6,"혜-408","다시중국을읽을시간"],[1,4,5,"혜-409","창의문제해결프로젝트"],[1,7,8,"혜-409","창의문제해결프로젝트"],[2,1,3,"혜-409","한국어문법및회화2"],[2,7,9,"혜-409","(비즈니스&"],[2,23,24,"혜-409","글로벌기초일회화"],[3,23,24,"혜-409","진로설계세미나"],[3,25,26,"혜-409","진로설계세미나"],[4,4,6,"혜-409","시네마한국어2"],[4,25,26,"혜-409","(공공행정&"],[1,4,5,"혜-410","창의문제해결프로젝트"],[1,7,8,"혜-410","창의문제해결프로젝트"],[2,1,3,"혜-410","한국어문법및회화2"],[2,23,24,"혜-410","프랑스언어와문화"],[3,23,24,"혜-410","더빙으로배우는영어"],[3,25,26,"혜-410","무기체계론"],[4,4,6,"혜-410","시네마한국어2"],[1,23,24,"혜-411","부자들의투자법"],[1,25,26,"혜-411","AI를활용한증권투자로부자되기"],[2,23,24,"혜-411","미디어로보는중국의디지털경제이야기"],[3,4,6,"혜-411","드라마한국어2"],[3,7,9,"혜-411","(토목건축/"],[4,4,6,"혜-411","시네마한국어2"],[1,21,22,"혜-501","Advanced Calculus 2"],[1,23,24,"혜-501","환경과인간"],[1,25,26,"혜-501","프레젠테이션기법"],[2,21,22,"혜-501","광고기획과크리에이티브"],[2,23,24,"혜-501","브랜드스토리텔링"],[2,25,26,"혜-501","광고미디어마케팅전략"],[3,21,22,"혜-501","디지털미디어광고제작"],[3,23,24,"혜-501","PR캠페인"],[3,25,26,"혜-501","문화행사기획"],[4,21,22,"혜-501","4차산업혁명과법이야기"],[4,23,24,"혜-501","소비자행동과IMC"],[4,25,26,"혜-501","광고와트렌드"],[5,21,22,"혜-501","기술경영과혁신전략"],[5,23,24,"혜-501","성공의비밀"],[1,7,8,"혜-502","창의문제해결프로젝트"],[1,21,22,"혜-502","실용중국어"],[1,23,24,"혜-502","세계차문화의역사와가치"],[2,1,3,"혜-502","관광한국어 2"],[2,4,6,"혜-502","관광비즈니스한국어"],[2,25,26,"혜-502","미래전쟁이야기"],[3,21,22,"혜-502","창업입문"],[3,23,24,"혜-502","미디어로세상보기"],[3,25,26,"혜-502","생활속화학과웰니스"],[4,21,22,"혜-502","법과사회"],[4,23,24,"혜-502","한중일소비자마음읽기"],[4,25,26,"혜-502","디지털스토리텔링"],[5,21,22,"혜-502","여행중국어"],[5,23,24,"혜-502","여행으로배우는문화유산"],[5,25,26,"혜-502","비즈니스혁신인물연구"],[1,21,22,"혜-503","인간은무엇인가"],[1,23,24,"혜-503","르네상스예술세계"],[1,25,26,"혜-503","직업기초융합역량"],[2,1,3,"혜-503","호텔연회서비스실무"],[2,4,6,"혜-503","외식산업실무"],[2,7,9,"혜-503","바리스타실무"],[3,21,22,"혜-503","쇼비즈니스아트"],[3,23,24,"혜-503","정보통계의이해"],[3,25,26,"혜-503","미술의이해"],[4,23,24,"혜-503","비즈니스인사이트"],[4,23,24,"혜-503","역사의이해"],[4,25,26,"혜-503","문화예술교육현장의이해와실습"],[5,21,22,"혜-503","국제사회의갈등과분쟁"],[5,23,24,"혜-503","생활속의통계"],[1,1,3,"혜-504","K-콘텐츠한국어2"],[1,23,24,"혜-504","음악의이해"],[1,25,26,"혜-504","사진학"],[2,1,3,"혜-504","서비스마케팅"],[2,4,6,"혜-504","호텔경영실무"],[2,25,26,"혜-504","중국스토리"],[3,21,22,"혜-504","영화의이해"],[3,23,24,"혜-504","명작으로읽는세계"],[3,25,26,"혜-504","리더십"],[4,21,22,"혜-504","AI융합생활안전과응급처치"],[4,23,24,"혜-504","유라시아의숨겨진도시여행"],[4,25,26,"혜-504","현대인의교양과자기관리"],[5,23,24,"혜-504","기업가정신"],[5,25,26,"혜-504","국제관계론"],[1,21,22,"혜-506","광고크리에이티브디자인Ⅰ"],[1,23,24,"혜-506","광고영상편집기초"],[1,25,26,"혜-506","영상제작의이해"],[2,23,24,"혜-506","광고이미지스튜디오Ⅰ"],[2,25,26,"혜-506","2D그래픽스디자인"],[3,23,24,"혜-506","AI크리에이티브스튜디오"],[3,25,26,"혜-506","1인미디어크리에이티브"],[4,21,22,"혜-506","CF제작실습Ⅰ"],[4,23,24,"혜-506","카피라이팅기초"],[4,25,26,"혜-506","OOH광고디자인"],[1,6,8,"혜-507","스페이스CMF플래닝"],[3,2,4,"혜-507","색채학"],[4,6,8,"혜-507","아트앤미디어"],[1,1,3,"혜-509","K-콘텐츠한국어2"],[1,23,24,"혜-509","드론운용"],[1,25,26,"혜-509","실험으로배우는환경화학의이해"],[2,4,6,"혜-509","관광자원론"],[2,21,22,"혜-509","장교진로설계"],[2,25,26,"혜-509","군사지리학"],[3,1,3,"혜-509","관광영어2"],[3,7,8,"혜-509","북한사회의이해"],[3,23,24,"혜-509","드론의이론과실제"],[4,21,22,"혜-509","군사이론"],[4,23,24,"혜-509","패션바이블"],[4,25,26,"혜-509","투자와심리"],[5,4,6,"혜-509","K-콘텐츠한국어2"],[5,21,22,"혜-509","군사학세미나"],[1,1,3,"혜-510","K-콘텐츠한국어2"],[1,23,24,"혜-510","일본챌린지"],[1,25,26,"혜-510","영화로배우는군대사회"],[2,21,22,"혜-510","전략론"],[2,23,24,"혜-510","창의적스타트업"],[2,25,26,"혜-510","성격심리학"],[3,23,24,"혜-510","현대사회와패션"],[4,1,3,"혜-510","생활속의한국어2"],[4,23,24,"혜-510","젠더의가장자리에서만나는나"],[4,25,26,"혜-510","전쟁사"],[5,4,6,"혜-510","고급토픽2"],[5,21,22,"혜-510","글로벌비즈니스매너"],[1,2,3,"혜-511","자기계발과인성함양"],[1,23,24,"혜-511","인간은무엇인가"],[2,21,22,"혜-511","글로벌문화이해"],[2,23,24,"혜-511","패션스타일링"],[2,25,26,"혜-511","영화로보는전쟁사"],[3,23,24,"혜-511","영화속의법과윤리"],[3,25,26,"혜-511","미술로보는심리학"],[4,1,3,"혜-511","초급뷰티한국어2"],[4,23,24,"혜-511","프랑스스토리"],[4,25,26,"혜-511","데이터로보는세상"],[5,1,3,"혜-511","시네마한국어2"],[5,4,6,"혜-511","비즈니스한국어2"],[3,6,8,"혜-609","상품제작기법연구"],[5,2,4,"혜-609","패브릭스타일링"],[1,2,4,"혜-613","리빙프로덕트디자인"],[3,2,4,"혜-613","토털코디네이션스튜디오"],[3,5,7,"혜-613","컨버전스디자인스튜디오"],[3,8,10,"혜-613","포트폴리오"],[4,6,8,"혜-613","조형"],[1,6,8,"혜-614","UX/UI 디자인 2"],[3,2,4,"혜-614","컨템포러리아트"],[3,6,8,"혜-614","캐릭터디자인"],[4,2,4,"혜-614","크리에이티브디자인프로젝트2"],[4,5,7,"혜-614","시각커뮤니케이션디자인"],[4,8,10,"혜-614","콘텐츠프로젝트"],[5,6,8,"혜-614","컴퓨터그래픽2"],[1,2,4,"혜-615","에디토리얼디자인2"],[1,6,8,"혜-615","브랜드이미지디자인2"],[2,2,4,"혜-615","포토이미지메이킹"],[2,6,8,"혜-615","포토이미지메이킹"],[3,2,4,"혜-615","브랜드패키지디자인"],[3,6,8,"혜-615","CM디자인제작실무"],[4,2,4,"혜-615","3D애니메이션"],[5,6,8,"혜-615","컴퓨터그래픽2"],[1,2,4,"혜-617","DX영상디자인2"],[3,2,4,"혜-617","디자인테크놀로지"],[4,6,8,"혜-617","모션그래픽디자인"],[5,2,4,"혜-617","디지털디자인스튜디오2"],[5,6,8,"혜-617","디지털서피스디자인"],[1,2,4,"혜-618","오토캐드"],[1,6,8,"혜-618","웹디자인"],[4,2,4,"혜-618","공간디자인프로젝트"],[4,6,8,"혜-618","비쥬얼머천다이즈디자인"],[5,6,8,"혜-618","텍스타일CAD2"],[2,2,4,"혜-712","캐릭터의이해"],[2,6,8,"혜-712","창작기획실습2"],[3,6,8,"혜-712","영화사"],[4,2,4,"혜-712","아이템제작실습론"],[4,6,8,"혜-712","영화작가론1"],[1,2,5,"혜-714","영화제작실습2"],[1,6,9,"혜-714","영화제작실습2"],[2,6,8,"혜-714","실험영화론"],[3,2,5,"혜-714","영화제작실습4"],[3,6,8,"혜-714","기록영화실습"],[4,2,4,"혜-714","AI기반스토리작법"],[4,6,8,"혜-714","장편시나리오창작실습2"],[3,2,4,"혜-715","영화기술"],[1,2,5,"혜-716","디지털영화제작실제"],[1,6,9,"혜-716","디지털영화제작실제"],[2,2,4,"혜-716","영화촬영"],[2,6,8,"혜-716","영화독립과제2"],[4,6,8,"혜-716","디지털음향실습"],[1,2,3,"혜-B101","Communication"],[1,4,5,"혜-B101","Communication"],[2,23,24,"혜-B101","재미있는연기연습"],[3,2,3,"혜-B101","Communication"],[3,4,5,"혜-B101","Communication"],[5,2,3,"혜-B101","미래리더를위한대인관계"],[5,4,5,"혜-B101","미래리더를위한대인관계"],[3,21,22,"혜-B102","진로설계세미나"],[3,23,24,"혜-B102","진로설계세미나"],[3,25,26,"혜-B102","진로설계세미나"],[5,2,3,"혜-B102","Life Care Design"],[5,4,5,"혜-B102","Life Care Design"],[5,7,8,"혜-B102","미래리더를위한대인관계"],[1,2,3,"혜-B106","Communication"],[1,4,5,"혜-B106","Communication"],[1,25,26,"혜-B106","미국드라마영어연구"],[2,7,8,"혜-B106","영화속의영문학"],[2,23,24,"혜-B106","마음챙김심리학"],[3,4,5,"혜-B106","Communication"],[3,21,22,"혜-B106","진로설계세미나"],[3,25,26,"혜-B106","진로설계세미나"],[5,2,3,"혜-B106","Life Care Design"],[5,4,5,"혜-B106","미래리더를위한대인관계"],[5,7,8,"혜-B106","미래리더를위한대인관계"],[2,23,24,"혜-B107","호러장르소사이어티"],[3,21,22,"혜-B107","진로설계세미나"],[3,23,24,"혜-B107","진로설계세미나"],[3,25,26,"혜-B107","진로설계세미나"],[5,2,3,"혜-B107","Life Care Design"],[5,4,5,"혜-B107","Life Care Design"],[5,7,8,"혜-B107","미래리더를위한대인관계"]];
+const RESTRICTED=["혜-506","혜-507"];
+const DAYS=["일","월","화","수","목","금","토"];
+const DAY_START=540, DAY_END=1140; // 09:00 ~ 19:00
+const CHECKIN_GRACE=10;            // 입실 시작 후 10분까지 체크인
+const NOSHOW_LIMIT=3, BLOCK_DAYS=7;
+
+/* ---------- 유틸 ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const fmt=m=>pad(Math.floor(m/60))+":"+pad(m%60);
+const dk=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parseDK=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const dayLabel=s=>{const d=parseDK(s);return (d.getMonth()+1)+"/"+d.getDate()+"("+DAYS[d.getDay()]+")"};
+const uid8=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+function pStart(p){return p>=21?[540,630,720,810,900,990][p-21]:540+(p-1)*60}
+function pEnd(p){return p>=21?[615,705,795,885,975,1065][p-21]:540+(p-1)*60+50}
+const CLASSES={}; // room -> [{day,s,e,name}]
+SCHEDULE.forEach(([day,p1,p2,room,name])=>{(CLASSES[room]=CLASSES[room]||[]).push({day,s:pStart(p1),e:pEnd(p2),name})});
+const ROOMS=Object.keys(CLASSES).sort((a,b)=>roomSort(a)-roomSort(b)||a.localeCompare(b));
+function roomSort(r){const n=r.slice(2);return n[0]==="B"?-1:parseInt(n[0])}
+const roomName=r=>r.slice(2)+"호";
+const floorOf=r=>{const n=r.slice(2);return n[0]==="B"?"지하 1층":n[0]+"층"};
+const FLOORS=[...new Set(ROOMS.map(floorOf))];
+
+/* ---------- 시간(시연용으로 조정 가능) ---------- */
+let offsetMs=0;
+try{offsetMs=Number(localStorage.getItem("hy_offset")||0)||0}catch(e){}
+const now=()=>new Date(Date.now()+offsetMs);
+const nowMin=()=>{const n=now();return n.getHours()*60+n.getMinutes()+n.getSeconds()/60};
+const todayKey=()=>dk(now());
+const absTime=(date,m)=>{const d=parseDK(date);d.setHours(0,0,0,0);return d.getTime()+m*60000};
+
+/* ---------- 저장소: 공유 DB가 있으면 공유, 없으면 이 브라우저에만 ---------- */
+let S={users:{},res:{},notices:{}};
+let store={mode:"local",db:null};
+const LSKEY="hy_state_v1";
+function loadLocal(){
+  store.mode="local";
+  try{const j=JSON.parse(localStorage.getItem(LSKEY)||"null");if(j&&j.users)S={users:j.users||{},res:j.res||{},notices:j.notices||{}}}catch(e){}
+}
+function saveLocal(){try{localStorage.setItem(LSKEY,JSON.stringify(S))}catch(e){}}
+const COL={users:"users",res:"reservations",notices:"notices"};
+async function put(kind,id,obj){
+  if(obj==null)delete S[kind][id];else S[kind][id]=obj;
+  if(store.mode==="shared"){
+    try{
+      const d=store.db.collection(COL[kind]).doc(id);
+      if(obj==null)await d.delete();else await d.set(JSON.parse(JSON.stringify(obj)));
+    }catch(e){toast("서버 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.")}
+  }else saveLocal();
+}
+async function initStore(){
+  let db=null;
+  try{
+    if(window.claude&&claude.use){
+      db=await Promise.race([claude.use("db"),new Promise(r=>setTimeout(()=>r(null),4000))]);
+    }
+  }catch(e){db=null}
+  if(!db){loadLocal();await seedAdmin();return}
+  store.db=db;
+  try{
+    let got=0;
+    const subscribe=kind=>db.collection(COL[kind]).onSnapshot(snap=>{
+      const m={};
+      const docs=snap.docs||[];
+      docs.forEach(d=>{m[d.id]=typeof d.data==="function"?d.data():d});
+      S[kind]=m;got++;
+      if(got>=3&&!store.ready){store.ready=true;seedAdmin()}
+      render();
+    });
+    store.mode="shared";
+    ["users","res","notices"].forEach(subscribe);
+    setTimeout(()=>{if(!store.ready){ // 공유 DB 응답이 없으면 로컬로 전환
+      store.mode="local";loadLocal();seedAdmin();render()}},9000);
+  }catch(e){loadLocal();await seedAdmin()}
+}
+async function sha(t){
+  try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("hy:"+t));
+    return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+  catch(e){return "p:"+t}
+}
+async function seedAdmin(){
+  if(S.users.admin)return;
+  await put("users","admin",{id:"admin",name:"관리자",pw:await sha("admin1234"),admin:true,created:Date.now()});
+}
+
+/* ---------- 도메인 로직 ---------- */
+function weekdayOf(date){return parseDK(date).getDay()}
+function activeRes(r){return r.status==="예약됨"||r.status==="이용중"}
+function conflict(room,date,s,e,ignoreId){
+  const wd=weekdayOf(date);
+  for(const c of CLASSES[room]||[])if(c.day===wd&&c.s<e&&s<c.e)return "수업 시간표와 겹칩니다 ("+c.name+")";
+  for(const r of Object.values(S.res))if(r.id!==ignoreId&&r.room===room&&r.date===date&&activeRes(r)&&r.s<e&&s<r.e)return "이미 예약된 시간입니다";
+  for(const n of Object.values(S.notices))if(n.room===room&&n.date===date&&n.s<e&&s<n.e)return "특강/시간표 변경으로 사용할 수 없습니다 ("+n.title+")";
+  return null;
+}
+function segmentsOf(room,date){
+  const wd=weekdayOf(date),out=[];
+  (CLASSES[room]||[]).forEach(c=>{if(c.day===wd)out.push({t:"c",s:c.s,e:c.e,label:c.name})});
+  Object.values(S.res).forEach(r=>{if(r.room===room&&r.date===date&&activeRes(r))out.push({t:"r",s:r.s,e:r.e,label:"예약"})});
+  Object.values(S.notices).forEach(n=>{if(n.room===room&&n.date===date)out.push({t:"n",s:n.s,e:n.e,label:n.title})});
+  return out;
+}
+function statusNow(room,date){
+  if(RESTRICTED.includes(room))return {cls:"b-lock",txt:"학과 전용"};
+  if(date!==todayKey())return {cls:"b-free",txt:"예약 가능"};
+  const m=nowMin();
+  const seg=segmentsOf(room,date).find(g=>g.s<=m&&m<g.e);
+  if(!seg)return {cls:"b-free",txt:"비어 있음"};
+  if(seg.t==="c")return {cls:"b-class",txt:"수업 중"};
+  if(seg.t==="r")return {cls:"b-res",txt:"예약 중"};
+  return {cls:"b-lock",txt:"특강/변경"};
+}
+function blockedUntil(uid){
+  const ns=Object.values(S.res).filter(r=>r.uid===uid&&r.status==="노쇼");
+  if(ns.length<NOSHOW_LIMIT)return null;
+  const last=Math.max(...ns.map(r=>absTime(r.date,r.e)));
+  const until=last+BLOCK_DAYS*86400000;
+  return now().getTime()<until?until:null;
+}
+let ticking=false;
+async function tickStatus(){
+  if(ticking)return;ticking=true;
+  try{
+    const t=now().getTime();
+    for(const r of Object.values(S.res)){
+      if(r.status==="예약됨"&&t>absTime(r.date,r.s)+CHECKIN_GRACE*60000){
+        await put("res",r.id,{...r,status:"노쇼",note:"입실 시작 후 "+CHECKIN_GRACE+"분 내 미체크인으로 자동 취소"});
+      }else if(r.status==="이용중"&&t>absTime(r.date,r.e)){
+        await put("res",r.id,{...r,status:"완료"});
+      }
+    }
+  }finally{ticking=false}
+  render(true);
+}
+
+/* ---------- UI 상태 ---------- */
+const U={tab:"search",date:null,floor:"",fs:"",fe:"",freeOnly:false,me:null,modal:null,demo:false};
+try{U.me=sessionStorage.getItem("hy_me")}catch(e){}
+function defaultDate(){const n=now();return nowMin()>1110?dk(new Date(n.getFullYear(),n.getMonth(),n.getDate()+1)):dk(n)}
+function me(){return U.me&&S.users[U.me]?S.users[U.me]:null}
+function dateOptions(){const n=now(),o=[];for(let i=0;i<14;i++)o.push(dk(new Date(n.getFullYear(),n.getMonth(),n.getDate()+i)));return o}
+function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.display="none",2600)}
+
+/* ---------- 렌더 ---------- */
+function render(soft){
+  if(!U.date||!dateOptions().includes(U.date))U.date=defaultDate();
+  const m=me();
+  $("#userbox").innerHTML=m?`<span>${esc(m.name)} (${esc(m.id)})</span><button class="btn ghost sm" data-act="logout">로그아웃</button>`
+    :`<button class="btn ghost sm" data-act="login">로그인</button><button class="btn sm" data-act="signup">회원가입</button>`;
+  const tabs=[["search","빈 강의실 조회"],["mine","예약 내역"]];
+  if(m&&m.admin)tabs.push(["admin","관리자"]);
+  if(!tabs.some(t=>t[0]===U.tab))U.tab="search";
+  $("#tabs").innerHTML=tabs.map(t=>`<button class="tab ${U.tab===t[0]?"on":""}" data-tab="${t[0]}">${t[1]}</button>`).join("");
+  const html=U.tab==="search"?viewSearch():U.tab==="mine"?viewMine():viewAdmin();
+  const M=$("#main");
+  if(M.dataset.sig!==html){
+    const keep=snapshotInputs(M);
+    M.innerHTML=html;M.dataset.sig=html;
+    restoreInputs(M,keep);
+  }
+  renderLayer();
+}
+function bar(room,date){
+  const segs=segmentsOf(room,date);
+  const pct=m=>((m-DAY_START)/(DAY_END-DAY_START)*100);
+  let h='<div class="tl">';
+  if(RESTRICTED.includes(room))h+=`<div class="seg x" style="left:0;width:100%"></div>`;
+  segs.forEach(g=>{const s=Math.max(g.s,DAY_START),e=Math.min(g.e,DAY_END);if(e>s)h+=`<div class="seg ${g.t}" style="left:${pct(s)}%;width:${pct(e)-pct(s)}%" title="${esc(fmt(g.s)+"-"+fmt(g.e)+" "+g.label)}"></div>`});
+  if(date===todayKey()){const m=nowMin();if(m>=DAY_START&&m<=DAY_END)h+=`<div class="nowline" style="left:${pct(m)}%"></div>`}
+  h+='</div><div class="ticks">';
+  for(let t=9;t<=19;t+=2)h+=`<span style="left:${pct(t*60)}%">${t}</span>`;
+  return h+"</div>";
+}
+function viewSearch(){
+  const date=U.date,fs=U.fs===""?null:+U.fs,fe=U.fe===""?null:+U.fe;
+  const tOpts=[];for(let m=DAY_START;m<=DAY_END;m+=30)tOpts.push(m);
+  let list=ROOMS.filter(r=>!U.floor||floorOf(r)===U.floor);
+  const rangeSet=fs!=null&&fe!=null&&fe>fs;
+  const info=r=>{
+    if(RESTRICTED.includes(r))return {ok:false};
+    if(rangeSet)return {ok:!conflict(r,date,fs,fe)};
+    return {ok:true};
+  };
+  if(rangeSet||U.freeOnly){
+    list=list.filter(r=>{
+      if(RESTRICTED.includes(r))return false;
+      if(rangeSet&&conflict(r,date,fs,fe))return false;
+      if(U.freeOnly&&date===todayKey()&&statusNow(r,date).txt!=="비어 있음")return false;
+      return true;
+    });
+  }
+  const avail=list.filter(r=>!RESTRICTED.includes(r)).length;
+  const notices=Object.values(S.notices).filter(n=>n.date===date);
+  let h=`<div class="notice"><b>안내</b> 특강 등으로 시간표가 변경될 수 있으니 이용 전 한 번 더 확인해 주세요.`;
+  if(notices.length)h+="<ul>"+notices.map(n=>`<li>${esc(roomName(n.room))} ${esc(dayLabel(n.date))} ${fmt(n.s)}~${fmt(n.e)} · ${esc(n.title)}</li>`).join("")+"</ul>";
+  h+="</div>";
+  h+=`<div class="bar">
+    <label>날짜<select id="f-date" data-f="date">${dateOptions().map(d=>`<option value="${d}" ${d===date?"selected":""}>${dayLabel(d)}${d===todayKey()?" 오늘":""}</option>`).join("")}</select></label>
+    <label>층<select id="f-floor" data-f="floor"><option value="">전체</option>${FLOORS.map(f=>`<option ${f===U.floor?"selected":""}>${f}</option>`).join("")}</select></label>
+    <label>시작<select id="f-fs" data-f="fs"><option value="">전체</option>${tOpts.slice(0,-1).map(m=>`<option value="${m}" ${U.fs!==""&&+U.fs===m?"selected":""}>${fmt(m)}</option>`).join("")}</select></label>
+    <label>종료<select id="f-fe" data-f="fe"><option value="">전체</option>${tOpts.slice(1).map(m=>`<option value="${m}" ${U.fe!==""&&+U.fe===m?"selected":""}>${fmt(m)}</option>`).join("")}</select></label>
+    <label class="chk"><input type="checkbox" id="f-free" data-f="freeOnly" ${U.freeOnly?"checked":""}> 지금 비어 있는 방만</label>
+  </div>`;
+  h+=`<div class="legend"><span><i style="background:#eef8f1"></i>빈 시간</span><span><i style="background:#c3ccd8"></i>수업</span><span><i style="background:#ecd48c"></i>예약</span><span><i style="background:#e3aaa0"></i>특강/변경</span><span><i style="background:#f4e4e4"></i>학과 전용</span></div>`;
+  h+=`<p class="count">${dayLabel(date)} 기준 · 예약 가능한 강의실 ${avail}개${rangeSet?" ("+fmt(fs)+"~"+fmt(fe)+" 비어 있음)":""}</p>`;
+  if(!list.length)return h+`<div class="empty">조건에 맞는 강의실이 없습니다.</div>`;
+  h+='<div class="grid">';
+  list.forEach(r=>{
+    const st=statusNow(r,date),lock=RESTRICTED.includes(r);
+    const ns=notices.filter(n=>n.room===r);
+    h+=`<div class="card"><h3>${esc(roomName(r))}<span class="badge ${st.cls}">${st.txt}</span></h3>
+      <div class="meta">혜인관 ${esc(floorOf(r))}${lock?" · 특정 학과 전용 강의실":""}</div>${bar(r,date)}
+      <div class="row"><span class="tags">${ns.length?"특강/시간표 변경 있음":""}</span>
+      ${lock?`<button class="btn" disabled>예약 불가</button>`:`<button class="btn" data-act="book" data-room="${esc(r)}">예약하기</button>`}</div></div>`;
+  });
+  return h+"</div>";
+}
+const STCLS={"예약됨":"a","이용중":"b","완료":"c","취소":"c","노쇼":"d","관리자취소":"d","노쇼해제":"c"};
+function resRows(arr,admin){
+  return arr.map(r=>{
+    const t=now().getTime(),st=absTime(r.date,r.s);
+    let act="";
+    if(r.status==="예약됨"){
+      const can=t>=st&&t<=st+CHECKIN_GRACE*60000;
+      if(!admin)act+=`<button class="btn sm" data-act="checkin" data-id="${r.id}" ${can?"":"disabled"}>체크인</button> `;
+      act+=`<button class="btn sm danger" data-act="${admin?"force":"cancel"}" data-id="${r.id}">${admin?"강제 취소":"취소"}</button>`;
+      if(!admin&&!can)act+=`<div class="hint">체크인 ${fmt(r.s)}~${fmt(r.s+CHECKIN_GRACE)}</div>`;
+    }
+    const label=r.status==="관리자취소"?"관리자 취소":r.status;
+    return `<tr><td>${dayLabel(r.date)}</td>${admin?`<td>${esc(r.uname)}<div class="hint">${esc(r.uid)}</div></td>`:""}<td>${esc(roomName(r.room))}</td><td>${fmt(r.s)}~${fmt(r.e)}</td><td>${esc(r.purpose||"-")}</td><td><span class="st ${STCLS[r.status]||"c"}">${esc(label)}</span>${r.note?`<div class="hint">${esc(r.note)}</div>`:""}</td><td>${act}</td></tr>`;
+  }).join("");
+}
+const sortRes=a=>a.sort((x,y)=>absTime(y.date,y.s)-absTime(x.date,x.s));
+function viewMine(){
+  const m=me();
+  if(!m)return `<div class="empty">예약 내역은 로그인 후 확인할 수 있습니다.<br><br><button class="btn" data-act="login">로그인</button></div>`;
+  const arr=sortRes(Object.values(S.res).filter(r=>r.uid===m.id));
+  const ns=arr.filter(r=>r.status==="노쇼").length,bu=blockedUntil(m.id);
+  let h="";
+  if(bu)h+=`<div class="notice" style="background:#fbeeee;border-color:#d9a4a4;color:#7a2222">노쇼가 ${NOSHOW_LIMIT}회 이상 누적되어 ${dayLabel(dk(new Date(bu)))}까지 예약이 제한됩니다.</div>`;
+  else if(ns)h+=`<div class="notice">노쇼 ${ns}회 누적 (${NOSHOW_LIMIT}회 이상이면 ${BLOCK_DAYS}일간 예약이 제한됩니다)</div>`;
+  if(!arr.length)return h+`<div class="empty">예약 내역이 없습니다.</div>`;
+  return h+`<div class="tw"><table><thead><tr><th>날짜</th><th>강의실</th><th>시간</th><th>사용 목적</th><th>상태</th><th></th></tr></thead><tbody>${resRows(arr,false)}</tbody></table></div>`;
+}
+function viewAdmin(){
+  const m=me();if(!m||!m.admin)return "";
+  const arr=sortRes(Object.values(S.res));
+  const ns=Object.values(S.notices).sort((a,b)=>a.date.localeCompare(b.date));
+  const opt=[];for(let t=DAY_START;t<=DAY_END;t+=30)opt.push(t);
+  let h=`<div class="panel"><h2>특강 · 시간표 변경 등록</h2>
+   <div class="bar" style="border:0;padding:0;margin:0">
+    <label>강의실<select id="a-room">${ROOMS.filter(r=>!RESTRICTED.includes(r)).map(r=>`<option value="${esc(r)}">${esc(roomName(r))}</option>`).join("")}</select></label>
+    <label>날짜<select id="a-date">${dateOptions().map(d=>`<option value="${d}">${dayLabel(d)}</option>`).join("")}</select></label>
+    <label>시작<select id="a-s">${opt.slice(0,-1).map(t=>`<option value="${t}">${fmt(t)}</option>`).join("")}</select></label>
+    <label>종료<select id="a-e">${opt.slice(1).map(t=>`<option value="${t}" ${t===600?"selected":""}>${fmt(t)}</option>`).join("")}</select></label>
+    <label style="flex:1;min-width:160px">내용<input id="a-t" placeholder="예: 외부 초청 특강" style="border:1px solid #b9bfc9;border-radius:4px;padding:7px 8px"></label>
+    <button class="btn" data-act="addnotice">등록</button></div>
+    <div class="err" id="a-err"></div>
+    ${ns.length?`<div class="tw"><table><thead><tr><th>날짜</th><th>강의실</th><th>시간</th><th>내용</th><th></th></tr></thead><tbody>${ns.map(n=>`<tr><td>${dayLabel(n.date)}</td><td>${esc(roomName(n.room))}</td><td>${fmt(n.s)}~${fmt(n.e)}</td><td>${esc(n.title)}</td><td><button class="btn sm danger" data-act="delnotice" data-id="${n.id}">삭제</button></td></tr>`).join("")}</tbody></table></div>`:`<p class="hint">등록된 특강/변경 일정이 없습니다. 등록하면 해당 시간은 예약이 막히고 조회 화면에 공지가 표시됩니다.</p>`}</div>`;
+  h+=`<div class="panel"><h2>전체 예약 현황</h2>${arr.length?`<div class="tw"><table><thead><tr><th>날짜</th><th>예약자</th><th>강의실</th><th>시간</th><th>사용 목적</th><th>상태</th><th></th></tr></thead><tbody>${resRows(arr,true)}</tbody></table></div>`:`<p class="hint">예약이 없습니다.</p>`}</div>`;
+  const users=Object.values(S.users).filter(u=>!u.admin);
+  h+=`<div class="panel"><h2>회원 · 노쇼 현황</h2>${users.length?`<div class="tw"><table><thead><tr><th>이름</th><th>아이디</th><th>노쇼</th><th></th></tr></thead><tbody>${users.map(u=>{const c=Object.values(S.res).filter(r=>r.uid===u.id&&r.status==="노쇼").length;return `<tr><td>${esc(u.name)}</td><td>${esc(u.id)}</td><td>${c}회${blockedUntil(u.id)?" (예약 제한 중)":""}</td><td>${c?`<button class="btn sm ghost" data-act="clearns" data-id="${esc(u.id)}">노쇼 기록 해제</button>`:""}</td></tr>`}).join("")}</tbody></table></div>`:`<p class="hint">가입한 회원이 없습니다.</p>`}</div>`;
+  return h;
+}
+
+/* ---------- 모달 ---------- */
+function renderLayer(){
+  const L=$("#layer"),m=U.modal;let h="";
+  if(m){
+    if(m.type==="notice")h=`<div class="mask"><div class="modal" role="dialog" aria-modal="true"><h2>이용 전 꼭 확인해 주세요</h2>
+      <ol><li><b>예약하고 노쇼 금지</b><small>예약 시작 후 ${CHECKIN_GRACE}분 안에 체크인하지 않으면 자동 취소되고 노쇼로 기록됩니다.</small></li>
+      <li><b>예약되어 있는 방 사용 금지</b><small>다른 사람이 예약한 시간에는 해당 강의실을 사용할 수 없습니다.</small></li>
+      <li><b>특강 등 시간표 변경 가능성 있음</b><small>갑작스러운 일정 변경이 있을 수 있으니 이용 전 다시 확인해 주세요.</small></li></ol>
+      <div class="mbtn"><button class="btn" data-act="closem">닫기</button></div></div></div>`;
+    else if(m.type==="auth")h=authHtml(m);
+    else if(m.type==="book")h=bookHtml(m);
+  }
+  if(U.demo)h+=demoHtml();
+  if(L.dataset.sig===h)return;
+  const keep=snapshotInputs(L);
+  L.innerHTML=h;L.dataset.sig=h;
+  restoreInputs(L,keep);
+}
+// 주기적 갱신 때 입력 중인 내용과 포커스가 사라지지 않도록 보존
+function snapshotInputs(root){
+  const f=document.activeElement&&root.contains(document.activeElement)?document.activeElement:null;
+  const vals={};
+  root.querySelectorAll("input[id],textarea[id]").forEach(e=>{if(e.type!=="checkbox")vals[e.id]=e.value});
+  root.querySelectorAll("select[id^=a-]").forEach(e=>{vals[e.id]=e.value});
+  return {vals,focus:f&&f.id,pos:f&&f.selectionStart};
+}
+function restoreInputs(root,k){
+  for(const id in k.vals){const el=root.querySelector("#"+id);if(el&&el.tagName!=="SELECT"?true:el&&el.querySelector('option[value="'+k.vals[id]+'"]'))el.value=k.vals[id]}
+  if(k.focus){const el=root.querySelector("#"+k.focus);if(el){el.focus();try{if(k.pos!=null)el.setSelectionRange(k.pos,k.pos)}catch(e){}}}
+}
+function authHtml(m){
+  const su=m.mode==="signup";
+  return `<div class="mask"><div class="modal" role="dialog" aria-modal="true"><h2>${su?"회원가입":"로그인"}</h2>
+   <p class="hint" style="margin:-6px 0 12px">${m.why||"강의실 예약은 로그인 후 이용할 수 있습니다."}</p>
+   <div class="seg2"><button data-act="authmode" data-mode="login" class="${su?"":"on"}">로그인</button><button data-act="authmode" data-mode="signup" class="${su?"on":""}">회원가입</button></div>
+   ${su?`<div class="field"><label for="u-name">이름</label><input id="u-name" autocomplete="name" maxlength="12"></div>`:""}
+   <div class="field"><label for="u-id">아이디${su?" (영문·숫자·_ 4~20자)":""}</label><input id="u-id" autocomplete="username" maxlength="20" autocapitalize="none"></div>
+   <div class="field"><label for="u-pw">비밀번호${su?" (4자 이상)":""}</label><input id="u-pw" type="password" autocomplete="${su?"new-password":"current-password"}"></div>
+   ${su?`<div class="field"><label for="u-pw2">비밀번호 확인</label><input id="u-pw2" type="password" autocomplete="new-password"></div>`:""}
+   <div class="err" id="auth-err">${esc(m.err||"")}</div>
+   <div class="mbtn"><button class="btn ghost" data-act="closem">취소</button><button class="btn" data-act="${su?"dosignup":"dologin"}">${su?"가입하기":"로그인"}</button></div></div></div>`;
+}
+function freeStarts(room,date){
+  const out=[],n=nowMin(),today=date===todayKey();
+  for(let s=DAY_START;s<DAY_END;s+=30){if(today&&s<n)continue;if(!conflict(room,date,s,s+30))out.push(s)}
+  return out;
+}
+function maxEnd(room,date,s){let e=s+30;while(e+30<=DAY_END&&!conflict(room,date,s,e+30))e+=30;return e}
+function bookHtml(m){
+  const starts=freeStarts(m.room,m.date);
+  if(m.s==null||!starts.includes(m.s))m.s=starts[0];
+  const mx=m.s!=null?maxEnd(m.room,m.date,m.s):null;
+  if(m.s!=null&&(m.e==null||m.e<=m.s||m.e>mx))m.e=Math.min(m.s+60,mx);
+  const ends=[];if(m.s!=null)for(let e=m.s+30;e<=mx;e+=30)ends.push(e);
+  return `<div class="mask"><div class="modal" role="dialog" aria-modal="true"><h2>${esc(roomName(m.room))} 예약</h2>
+   <div class="field"><label for="b-date">날짜</label><select id="b-date">${dateOptions().map(d=>`<option value="${d}" ${d===m.date?"selected":""}>${dayLabel(d)}</option>`).join("")}</select></div>
+   <div class="tl-wrap">${bar(m.room,m.date)}</div>
+   ${starts.length?`<div style="display:flex;gap:10px;margin-top:6px"><div class="field" style="flex:1"><label for="b-s">시작</label><select id="b-s">${starts.map(s=>`<option value="${s}" ${s===m.s?"selected":""}>${fmt(s)}</option>`).join("")}</select></div>
+   <div class="field" style="flex:1"><label for="b-e">종료</label><select id="b-e">${ends.map(e=>`<option value="${e}" ${e===m.e?"selected":""}>${fmt(e)}</option>`).join("")}</select></div></div>
+   <div class="field"><label for="b-p">사용 목적</label><input id="b-p" maxlength="30" placeholder="예: 팀플 회의, 스터디, 시험 준비" value="${esc(m.purpose||"")}"></div>
+   <p class="hint">예약 시작 시각부터 ${CHECKIN_GRACE}분 안에 체크인해야 합니다.</p>`
+   :`<div class="empty" style="margin:10px 0">이 날짜에는 예약 가능한 시간이 없습니다.</div>`}
+   <div class="err" id="b-err">${esc(m.err||"")}</div>
+   <div class="mbtn"><button class="btn ghost" data-act="closem">닫기</button>${starts.length?`<button class="btn" data-act="dobook">예약하기</button>`:""}</div></div></div>`;
+}
+function demoHtml(){
+  const n=now(),v=n.getFullYear()+"-"+pad(n.getMonth()+1)+"-"+pad(n.getDate())+"T"+pad(n.getHours())+":"+pad(n.getMinutes());
+  return `<div class="demo"><h4>시연용 시간 설정</h4>
+   <div class="hint">현재 사이트 시간: ${dayLabel(dk(n))} ${pad(n.getHours())}:${pad(n.getMinutes())}${offsetMs?" (조정됨)":""}</div>
+   <div class="q"><button class="btn sm ghost" data-act="shift" data-min="10">+10분</button><button class="btn sm ghost" data-act="shift" data-min="11">+11분</button><button class="btn sm ghost" data-act="shift" data-min="60">+1시간</button></div>
+   <input type="datetime-local" id="d-dt" value="${v}" style="width:100%;border:1px solid #b9bfc9;border-radius:4px;padding:6px">
+   <div class="q"><button class="btn sm" data-act="setdt">이 시간으로</button><button class="btn sm ghost" data-act="realtime">실제 시간</button><button class="btn sm ghost" data-act="closedemo">닫기</button></div>
+   <div class="hint">발표에서 체크인 시간 제한과 노쇼 자동 취소를 바로 보여주기 위한 기능입니다.</div></div>`;
+}
+
+/* ---------- 이벤트 ---------- */
+document.addEventListener("click",async e=>{
+  const tab=e.target.closest("[data-tab]");
+  if(tab){const t=tab.dataset.tab;if(t==="mine"&&!me()){openAuth("login",{after:{tab:"mine"},why:"예약 내역은 로그인 후 확인할 수 있습니다."});return}U.tab=t;render();return}
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,id=b.dataset.id,m=U.modal;
+  if(a==="closem"){U.modal=null;render()}
+  else if(a==="login")openAuth("login");
+  else if(a==="signup")openAuth("signup");
+  else if(a==="authmode"){m.mode=b.dataset.mode;m.err="";render()}
+  else if(a==="logout"){U.me=null;try{sessionStorage.removeItem("hy_me")}catch(x){}U.tab="search";render();toast("로그아웃되었습니다.")}
+  else if(a==="dosignup")await doSignup();
+  else if(a==="dologin")await doLogin();
+  else if(a==="book"){
+    if(!me()){openAuth("login",{after:{book:b.dataset.room},why:"강의실 예약은 로그인 후 이용할 수 있습니다."});return}
+    openBook(b.dataset.room);
+  }
+  else if(a==="dobook")await doBook();
+  else if(a==="cancel"){const r=S.res[id];if(r&&r.status==="예약됨"){await put("res",id,{...r,status:"취소"});toast("예약을 취소했습니다.");render()}}
+  else if(a==="force"){const r=S.res[id];if(r&&r.status==="예약됨"){await put("res",id,{...r,status:"관리자취소",note:"관리자에 의해 취소됨"});render()}}
+  else if(a==="checkin"){
+    const r=S.res[id],t=now().getTime(),st=r?absTime(r.date,r.s):0;
+    if(r&&r.status==="예약됨"&&t>=st&&t<=st+CHECKIN_GRACE*60000){await put("res",id,{...r,status:"이용중",checkedIn:true});toast("체크인되었습니다. 이용 후 정리해 주세요.");render()}
+    else{toast("체크인 가능 시간이 아닙니다.");await tickStatus()}
+  }
+  else if(a==="addnotice")await addNotice();
+  else if(a==="delnotice"){await put("notices",id,null);render()}
+  else if(a==="clearns"){for(const r of Object.values(S.res))if(r.uid===id&&r.status==="노쇼")await put("res",r.id,{...r,status:"노쇼해제"});render()}
+  else if(a==="demo"){U.demo=true;render()}
+  else if(a==="closedemo"){U.demo=false;render()}
+  else if(a==="shift"){setOffset(offsetMs+Number(b.dataset.min)*60000);}
+  else if(a==="setdt"){const v=$("#d-dt").value;if(v){setOffset(new Date(v).getTime()-Date.now())}}
+  else if(a==="realtime")setOffset(0);
+});
+function setOffset(ms){offsetMs=ms;try{localStorage.setItem("hy_offset",String(ms))}catch(e){}tickStatus()}
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.f){const k=t.dataset.f;U[k]=t.type==="checkbox"?t.checked:t.value;render();return}
+  const m=U.modal;
+  if(m&&m.type==="book"){
+    if(t.id==="b-date"){m.date=t.value;m.s=null;m.e=null;m.err="";m.purpose=($("#b-p")||{}).value||m.purpose;render()}
+    else if(t.id==="b-s"){m.s=+t.value;m.e=null;m.purpose=($("#b-p")||{}).value||"";render()}
+    else if(t.id==="b-e"){m.e=+t.value}
+  }
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&U.modal&&U.modal.type==="auth"&&e.target.tagName==="INPUT")$("#layer [data-act^=do]").click();
+  if(e.key==="Escape"&&U.modal&&U.modal.type!=="notice"){U.modal=null;render()}
+});
+function openAuth(mode,opt){U.modal={type:"auth",mode,err:"",after:(opt||{}).after,why:(opt||{}).why};render();setTimeout(()=>{const el=$("#u-id");if(el)el.focus()},0)}
+function authErr(t){U.modal.err=t;const el=$("#auth-err");if(el)el.textContent=t}
+async function doSignup(){
+  const name=$("#u-name").value.trim(),id=$("#u-id").value.trim().toLowerCase(),pw=$("#u-pw").value,pw2=$("#u-pw2").value;
+  if(!name)return authErr("이름을 입력해 주세요.");
+  if(!/^[a-z0-9_]{4,20}$/.test(id))return authErr("아이디는 영문, 숫자, _ 4~20자로 입력해 주세요.");
+  if(S.users[id])return authErr("이미 사용 중인 아이디입니다.");
+  if(pw.length<4)return authErr("비밀번호는 4자 이상이어야 합니다.");
+  if(pw!==pw2)return authErr("비밀번호 확인이 일치하지 않습니다.");
+  await put("users",id,{id,name,pw:await sha(pw),admin:false,created:Date.now()});
+  finishLogin(id,"가입이 완료되었습니다.");
+}
+async function doLogin(){
+  const id=$("#u-id").value.trim().toLowerCase(),pw=$("#u-pw").value,u=S.users[id];
+  if(!u||u.pw!==await sha(pw))return authErr("아이디 또는 비밀번호가 올바르지 않습니다.");
+  finishLogin(id,u.name+"님, 환영합니다.");
+}
+function finishLogin(id,msg){
+  const after=U.modal&&U.modal.after;
+  U.me=id;try{sessionStorage.setItem("hy_me",id)}catch(e){}
+  U.modal=null;
+  if(after&&after.tab)U.tab=after.tab;
+  if(after&&after.book){U.tab="search";openBook(after.book)}else render();
+  toast(msg);
+}
+function openBook(room){U.modal={type:"book",room,date:U.date,s:null,e:null,purpose:"",err:""};render()}
+async function doBook(){
+  const m=U.modal,u=me();if(!u)return;
+  const s=+$("#b-s").value,e=+$("#b-e").value,purpose=$("#b-p").value.trim();
+  const bu=blockedUntil(u.id);
+  const fail=t=>{m.err=t;m.purpose=purpose;m.s=s;m.e=e;render()};
+  if(bu)return fail("노쇼 누적으로 "+dayLabel(dk(new Date(bu)))+"까지 예약할 수 없습니다.");
+  if(m.date===todayKey()&&s<nowMin())return fail("이미 지난 시간입니다.");
+  const c=conflict(m.room,m.date,s,e);
+  if(c)return fail(c);
+  const id="r"+uid8();
+  await put("res",id,{id,uid:u.id,uname:u.name,room:m.room,date:m.date,s,e,purpose,status:"예약됨",checkedIn:false,created:Date.now()});
+  U.modal=null;U.tab="mine";render();toast("예약이 완료되었습니다. 시작 후 "+CHECKIN_GRACE+"분 안에 체크인해 주세요.");
+}
+async function addNotice(){
+  const room=$("#a-room").value,date=$("#a-date").value,s=+$("#a-s").value,e=+$("#a-e").value,title=$("#a-t").value.trim();
+  const er=t=>{$("#a-err").textContent=t};
+  if(!title)return er("내용을 입력해 주세요.");
+  if(e<=s)return er("종료 시간이 시작보다 늦어야 합니다.");
+  const id="n"+uid8();
+  await put("notices",id,{id,room,date,s,e,title});
+  // 해당 시간에 이미 잡힌 예약은 관리자가 확인할 수 있도록 표시만 하고 유지
+  toast("등록되었습니다.");render();
+}
+
+/* ---------- 시작 ---------- */
+(async function(){
+  U.modal={type:"notice"};
+  render();
+  await initStore();
+  render();
+  setInterval(tickStatus,5000);
+  tickStatus();
+})();
+</script>
+</body>
+</html>
